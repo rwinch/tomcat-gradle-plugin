@@ -1,0 +1,39 @@
+plugins {
+	id 'war'
+	id 'io.spring.tomcat'
+}
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	compile platform('org.springframework.boot:spring-boot-dependencies:2.2.0.RELEASE')
+	compile 'org.springframework.security:spring-security-config'
+	compile 'org.springframework.security:spring-security-web'
+	compile "javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.+"
+	compile "org.apache.taglibs:taglibs-standard-jstlel:1.+"
+	compile 'javax.servlet.jsp:javax.servlet.jsp-api:2.+'
+
+	compile 'javax.servlet:javax.servlet-api'
+
+	testCompile 'org.springframework.security:spring-security-test'
+	testCompile 'org.skyscreamer:jsonassert'
+	testCompile 'org.springframework:spring-test'
+
+	testCompile "org.seleniumhq.selenium:htmlunit-driver"
+	testCompile "org.seleniumhq.selenium:selenium-support"
+	testCompile "org.seleniumhq.selenium:selenium-support"
+	testCompile "org.assertj:assertj-core"
+	testCompile "junit:junit"
+}
+
+test {
+	doFirst {
+		tasks.tomcat.setHttpPort(0)
+		def tomcat = tasks.tomcat.start()
+		println "Started up on port $tomcat.connector"
+		test.systemProperty("app.httpPort", tomcat.port)
+	}
+}
