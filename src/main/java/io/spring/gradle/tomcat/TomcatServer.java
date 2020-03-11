@@ -19,6 +19,8 @@ public class TomcatServer {
 
 	private Tomcat tomcat;
 
+	private ClassLoader parentLoader;
+
 	public void setWebapp(File webapp) {
 		this.webapp = webapp;
 	}
@@ -35,6 +37,19 @@ public class TomcatServer {
 		this.httpPort = httpPort;
 	}
 
+	public Tomcat getTomcat() {
+		return this.tomcat;
+	}
+
+	public ClassLoader getParentLoader() {
+		return this.parentLoader;
+	}
+
+	public void setParentLoader(ClassLoader parentLoader) {
+		System.out.println("parentLoader " + parentLoader);
+		this.parentLoader = parentLoader;
+	}
+
 	public Tomcat start() throws LifecycleException, IOException {
 		int port = getHttpPort();
 		File webapp = getWebapp();
@@ -47,8 +62,12 @@ public class TomcatServer {
 		tomcat.getConnector(); // must be called to create default connector
 		tomcat.getHost().setAppBase(".");
 		Context context = tomcat.addWebapp("", webapp.toURI().toURL());
-//		context.setLoader(new WebappLoader(getClass().getClassLoader()));
+		if (this.parentLoader != null) {
+			context.setLoader(new WebappLoader(this.parentLoader));
+		}
+		System.out.println("Starting...");
 		tomcat.start();
+		System.out.println("Started");
 		this.tomcat = tomcat;
 		return tomcat;
 	}

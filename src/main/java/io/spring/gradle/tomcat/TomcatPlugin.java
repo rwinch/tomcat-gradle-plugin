@@ -25,13 +25,18 @@ public class TomcatPlugin implements Plugin<Project> {
 				tomcatTask.setGroup("Tomcat");
 				tomcatTask.setDescription("Runs Tomcat");
 				tomcatTask.dependsOn(tasks.named("war"));
+				tomcatTask.getConventionMapping().map("parentLoader", new Callable<ClassLoader>() {
+					@Override
+					public ClassLoader call() throws Exception {
+						ClassLoader classLoader = TomcatServer.class.getClassLoader();
+						return classLoader;
+					}
+				});
 				tomcatTask.getConventionMapping().map("webapp", new Callable<File>() {
 					@Override
 					public File call() throws Exception {
 						War war = (War) project.getTasks().getAt(WarPlugin.WAR_TASK_NAME);
 						File webappFile = war.getArchiveFile().get().getAsFile();
-						// FIXME: This works around convention not used?
-						tomcatTask.setWebapp(webappFile);
 						return webappFile;
 					}
 				});

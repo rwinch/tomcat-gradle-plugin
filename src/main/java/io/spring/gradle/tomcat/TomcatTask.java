@@ -33,11 +33,25 @@ public class TomcatTask extends ConventionTask {
 		this.server.setHttpPort(httpPort);
 	}
 
+	public ClassLoader getParentLoader() {
+		return server.getParentLoader();
+	}
+
+	public void setParentLoader(ClassLoader parentLoader) {
+		server.setParentLoader(parentLoader);
+	}
+
 	@TaskAction
-	public Tomcat start() throws IOException, LifecycleException {
-		Tomcat tomcat = this.server.start();
+	public Tomcat startAndAwait() throws IOException, LifecycleException {
+		Tomcat tomcat = start();
 		tomcat.getServer().await();
 		return tomcat;
+	}
+
+	public Tomcat start() throws IOException, LifecycleException {
+		this.server.setParentLoader(getParentLoader());
+		this.server.setWebapp(getWebapp());
+		return this.server.start();
 	}
 
 	public void stop() throws LifecycleException {
