@@ -15,20 +15,22 @@ import java.util.concurrent.Callable;
  * @author Rob Winch
  */
 public class TomcatPlugin implements Plugin<Project> {
-	public static final String TOMCAT_TASK_NAME = "tomcat";
+	public static final String TOMCAT_RUN_TASK_NAME = "tomcatRun";
+	public static final String TOMCAT_STOP_TASK_NAME = "tomcatStop";
 
 	@Override
 	public void apply(Project project) {
 		TaskContainer tasks = project.getTasks();
-		TaskProvider<TomcatTask> tomcat = tasks.register(TOMCAT_TASK_NAME, TomcatTask.class, new Action<TomcatTask>() {
+		TaskProvider<TomcatRunTask> tomcatRun = tasks.register(TOMCAT_RUN_TASK_NAME, TomcatRunTask.class, new Action<TomcatRunTask>() {
 			@Override
-			public void execute(TomcatTask tomcatTask) {
+			public void execute(TomcatRunTask tomcatTask) {
 				tomcatTask.setGroup("Tomcat");
 				tomcatTask.setDescription("Runs Tomcat");
 				tomcatTask.dependsOn(tasks.named("war"));
 				tomcatTask.getConventionMapping().map("parentLoader", new Callable<ClassLoader>() {
 					@Override
 					public ClassLoader call() throws Exception {
+						// FIXME: Can I somehow use a different classloader?
 						ClassLoader classLoader = TomcatServer.class.getClassLoader();
 						return classLoader;
 					}
@@ -39,6 +41,19 @@ public class TomcatPlugin implements Plugin<Project> {
 						War war = (War) project.getTasks().getAt(WarPlugin.WAR_TASK_NAME);
 						File webappFile = war.getArchiveFile().get().getAsFile();
 						return webappFile;
+					}
+				});
+			}
+		});
+		TaskProvider<TomcatStopTask> tomcatStop = tasks.register(TOMCAT_STOP_TASK_NAME, TomcatStopTask.class, new Action<TomcatStopTask>() {
+			@Override
+			public void execute(TomcatStopTask tomcatTask) {
+				tomcatTask.setGroup("Tomcat");
+				tomcatTask.setDescription("Stops Tomcat");
+				tomcatTask.getConventionMapping().map("server", new Callable<TomcatServer>() {
+					@Override
+					public TomcatServer call() throws Exception {
+						return tomcatRun.get().getServer();
 					}
 				});
 			}

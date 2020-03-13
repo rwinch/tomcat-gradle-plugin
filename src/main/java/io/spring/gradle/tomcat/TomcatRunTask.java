@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * @author Rob Winch
  */
-public class TomcatTask extends ConventionTask {
+public class TomcatRunTask extends ConventionTask {
 	private TomcatServer server = new TomcatServer();
 
 	public void setWebapp(File webapp) {
@@ -39,6 +39,10 @@ public class TomcatTask extends ConventionTask {
 
 	public void setParentLoader(ClassLoader parentLoader) {
 		server.setParentLoader(parentLoader);
+	}
+
+	public TomcatServer getServer() {
+		return this.server;
 	}
 
 	@TaskAction

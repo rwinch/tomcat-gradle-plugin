@@ -18,9 +18,11 @@ class TomcatServerTest {
 	void test() throws IOException, LifecycleException {
 
 		TomcatServer server = new TomcatServer();
+		server.setHttpPort(0);
 		server.setWebapp(new File("/home/rwinch/code/rwinch/hello-security/build/libs/hello-security.war"));
 
-		server.start().getServer().await();
+		server.start();
+		System.out.println(server);
 
 	}
 

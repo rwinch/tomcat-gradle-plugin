@@ -1,11 +1,8 @@
 package io.spring.gradle.tomcat
 
-import io.spring.gradle.tomcat.TomcatPlugin.TOMCAT_TASK_NAME
+import io.spring.gradle.tomcat.TomcatPlugin.TOMCAT_RUN_TASK_NAME
 import io.spring.gradle.testkit.junit.TestKit
-import org.assertj.core.api.Assertions.assertThat
-import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Test
-import java.io.File
 
 /**
  * @author Rob Winch
@@ -14,7 +11,7 @@ internal class TomcatPluginITest {
     @Test
     fun tomcatStartThenSuccess() {
         TestKit().use { testKit ->
-            val task = ":$TOMCAT_TASK_NAME"
+            val task = ":$TOMCAT_RUN_TASK_NAME"
             val build = testKit
                     .withProjectResource("hello-security")
                     .withArguments(task)

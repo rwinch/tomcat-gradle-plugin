@@ -73,7 +73,9 @@ public class TomcatServer {
 	}
 
 	public void stop() throws LifecycleException {
+		System.out.println("Stopping Tomcat...");
 		this.tomcat.stop();
+		System.out.println("Stopped");
 	}
 
 	private static File createBaseDir(int port) throws IOException {
