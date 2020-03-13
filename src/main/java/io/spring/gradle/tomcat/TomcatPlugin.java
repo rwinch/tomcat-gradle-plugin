@@ -15,11 +15,12 @@ import java.util.concurrent.Callable;
  * @author Rob Winch
  */
 public class TomcatPlugin implements Plugin<Project> {
+	public static final String TOMCAT_TASK_NAME = "tomcat";
 
 	@Override
 	public void apply(Project project) {
 		TaskContainer tasks = project.getTasks();
-		TaskProvider<TomcatTask> tomcat = tasks.register("tomcat", TomcatTask.class, new Action<TomcatTask>() {
+		TaskProvider<TomcatTask> tomcat = tasks.register(TOMCAT_TASK_NAME, TomcatTask.class, new Action<TomcatTask>() {
 			@Override
 			public void execute(TomcatTask tomcatTask) {
 				tomcatTask.setGroup("Tomcat");
