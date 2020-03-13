@@ -12,9 +12,7 @@ description = 'Sets up Javadoc and Aggregate Javadoc'
 sourceCompatibility = 1.8
 
 repositories {
-	maven { url "https://repository.apache.org/content/repositories/orgapachetomcat-1257/" }
-	mavenCentral()
-	maven { url "https://plugins.gradle.org/m2/" }
+	gradlePluginPortal()
 }
 
 dependencyLocking {
@@ -25,9 +23,10 @@ dependencies {
 	implementation gradleApi()
 
 	// FIXME: wait until tomcat 9.0.33 is released https://bz.apache.org/bugzilla/show_bug.cgi?id=64153
-	implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.33'
-	implementation 'org.apache.tomcat.embed:tomcat-embed-el:9.0.33'
-	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.33'
+	//        maven { url "https://repository.apache.org/content/repositories/orgapachetomcat-1257/" }
+	implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.30'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-el:9.0.30'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.30'
 	testImplementation 'org.assertj:assertj-core:3.+'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.+'
 	testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
