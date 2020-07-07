@@ -1,7 +1,8 @@
 package io.spring.gradle.tomcat
 
+import io.spring.gradle.GradleApi
 import io.spring.gradle.tomcat.TomcatPlugin.TOMCAT_RUN_TASK_NAME
-import io.spring.gradle.testkit.junit.TestKit
+import io.spring.gradle.TestKit
 import org.junit.jupiter.api.Test
 
 /**
@@ -9,9 +10,9 @@ import org.junit.jupiter.api.Test
  */
 internal class TomcatPluginITest {
     @Test
-    fun tomcatStartThenSuccess() {
+    fun tomcatStartThenSuccessWithTestKit() {
         TestKit().use { testKit ->
-            val task = ":$TOMCAT_RUN_TASK_NAME"
+            val task = ":check"
             val build = testKit
                     .withProjectResource("hello-security")
                     .withArguments(task)
@@ -24,6 +25,21 @@ internal class TomcatPluginITest {
 //            assertThat(m2).exists()
 //            val test = File(testKit.projectDir, aggregateJavadocPath("test"))
 //            assertThat(test).doesNotExist()
+        }
+    }
+
+    @Test
+    fun tomcatStartThenSuccessWith() {
+        GradleApi().use { api ->
+            val task = ":$TOMCAT_RUN_TASK_NAME"
+            val build = api
+                    .withProjectResource("hello-security")
+                    .newBuild()
+                    .setStandardError(System.err)
+                    .setStandardOutput(System.out)
+                    .withArguments("--include-build", "/home/rwinch/code/spring-gradle-plugins/tomcat-gradle-plugin")
+                    .forTasks("no")
+                    .run()
         }
     }
 
